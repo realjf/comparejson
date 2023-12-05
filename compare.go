@@ -4,7 +4,7 @@
 // # Created Date: 2023/12/05 10:58:01                                         #
 // # Author: realjf                                                            #
 // # -----                                                                     #
-// # Last Modified: 2023/12/05 11:25:37                                        #
+// # Last Modified: 2023/12/05 11:31:03                                        #
 // # Modified By: realjf                                                       #
 // # -----                                                                     #
 // #                                                                           #
@@ -29,8 +29,6 @@ func CompareJson(oldJson, newJson []byte) (changed []string) {
 		return
 	}
 
-	fmt.Printf("%v\n", oldMap)
-	fmt.Printf("%v\n", newMap)
 	return CompareMap(oldMap, newMap)
 }
 
