@@ -4,7 +4,7 @@
 // # Created Date: 2023/12/05 10:58:01                                         #
 // # Author: realjf                                                            #
 // # -----                                                                     #
-// # Last Modified: 2023/12/05 10:58:53                                        #
+// # Last Modified: 2023/12/05 11:25:37                                        #
 // # Modified By: realjf                                                       #
 // # -----                                                                     #
 // #                                                                           #
@@ -12,11 +12,29 @@
 package comparejson
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 )
 
-func CompareJson(oldMap, newMap map[string]interface{}) (changed []string) {
+func CompareJson(oldJson, newJson []byte) (changed []string) {
+	changed = make([]string, 0)
+	var oldMap, newMap map[string]interface{}
+	err := json.Unmarshal(oldJson, &oldMap)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(newJson, &newMap)
+	if err != nil {
+		return
+	}
+
+	fmt.Printf("%v\n", oldMap)
+	fmt.Printf("%v\n", newMap)
+	return CompareMap(oldMap, newMap)
+}
+
+func CompareMap(oldMap, newMap map[string]interface{}) (changed []string) {
 	changed = make([]string, 0)
 	changedMap := make(map[string]string, 0)
 	for key, val := range oldMap {
@@ -35,6 +53,7 @@ func CompareJson(oldMap, newMap map[string]interface{}) (changed []string) {
 			}
 		} else {
 			// 不存在
+			fmt.Printf("不存在：%s", key)
 			changedMap[key] = key
 		}
 	}
@@ -80,7 +99,12 @@ func compareJson(val interface{}, val2 interface{}) (equal bool, keys []string) 
 	case reflect.Map, reflect.Struct:
 		if valRef.Kind() == valRef2.Kind() {
 			isEqual := true
-			for _, k := range valRef.MapKeys() {
+			for _, k := range valRef2.MapKeys() {
+				if !valRef.MapIndex(k).IsValid() {
+					isEqual = false
+					keys = append(keys, k.String())
+					continue
+				}
 				if valRef2.IsValid() && valRef2.MapIndex(k).IsValid() && valRef2.MapIndex(k).CanInterface() {
 					// 存在
 					v, kk := compareJson(valRef.MapIndex(k).Interface(), valRef2.MapIndex(k).Interface())

@@ -4,7 +4,7 @@
 // # Created Date: 2023/12/05 10:59:19                                         #
 // # Author: realjf                                                            #
 // # -----                                                                     #
-// # Last Modified: 2023/12/05 11:00:04                                        #
+// # Last Modified: 2023/12/05 11:15:36                                        #
 // # Modified By: realjf                                                       #
 // # -----                                                                     #
 // #                                                                           #
@@ -18,7 +18,7 @@ import (
 	"github.com/realjf/comparejson"
 )
 
-func TestCompareJson(t *testing.T) {
+func TestCompareMap(t *testing.T) {
 	oldMap := map[string]interface{}{
 		"a": []interface{}{
 			"a", "b", 34, 23.23,
@@ -29,7 +29,7 @@ func TestCompareJson(t *testing.T) {
 			"a", "d", 34, 23.13,
 		},
 	}
-	fmt.Println(comparejson.CompareJson(oldMap, newMap))
+	fmt.Println(comparejson.CompareMap(oldMap, newMap))
 
 	oldMap1 := map[string]interface{}{
 		"a": []interface{}{
@@ -59,6 +59,12 @@ func TestCompareJson(t *testing.T) {
 			"f": 32,
 		},
 	}
-	fmt.Println(comparejson.CompareJson(oldMap1, newMap1))
+	fmt.Println(comparejson.CompareMap(oldMap1, newMap1))
 
+}
+
+func TestCompareJson(t *testing.T) {
+	oldJson := []byte(`{"a": "test", "b": "test23", "c": { "a": "test", "b": "test"}, "d":[23, 232, 23]}`)
+	newJson := []byte(`{"a": "test1", "b": "test23", "c": { "a1": "test1", "f": 131}, "d":[213, 232, 23, 323]}`)
+	fmt.Println(comparejson.CompareJson(oldJson, newJson))
 }
